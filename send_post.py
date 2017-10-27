@@ -2,22 +2,22 @@ import json
 import requests
 import os.path
 import time
+from random import *
 
 def run_observer():
     try:
         while True:
             time.sleep(1)
-            observer('node.txt')
+            observer('nodes.txt')
     except KeyboardInterrupt:
         print("parei")
 
 def observer(filepath):
     if os.path.isfile(filepath):
         filename = filepath.split('.')
-        file = filename[0] + '.txt'
         file_copy = filename[0] + '_copy.txt'
         os.rename(
-            file,
+            filepath,
             file_copy
             )
 
@@ -29,7 +29,6 @@ def delete_file(file_name):
     if os.path.isfile(file_name):
         os.remove(file_name)
 
-# ID  HORA MINUTO NIVEL(0/100) BATERIA(0/100) CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
 def post_register_data(post_fields):
     url = 'http://192.168.15.151:3000/feeders/register_data'
     post_request = requests.post(url, json=post_fields)
@@ -48,24 +47,40 @@ def read_file(file_name):
             "conductivity"]
     json_data = {}
     array_data = []
-    with open(file_name, "r") as f:
-        data = f.readlines()
+    with open(file_name, "r") as file_node:
+        data = file_node.readlines()
 
         for line in data:
-            words = line.split()
+            registers = line.split()
 
-            for index, value in enumerate(words):
+            for index, value in enumerate(registers):
                 json_data[keys[index]] = value
 
             array_data.append(json_data)
             json_data = {}
 
 
-        f.close()
+        file_node.close()
     request_data = {'data':array_data}
     return request_data
 
+# ID  HORA MINUTO NIVEL(0/100) BATERIA(0/100) CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
+def generate_data():
+    with open("nodes.txt", "w") as outfile:
+        for i in range(0, 100):
+            outfile.write(str(randint(1, 3)) + ' '
+                            + str(randint(1, 24)) + ' '
+                            + str(randint(1, 60)) + ' '
+                            + str(randint(0, 100)) + ' '
+                            + str(randint(0, 100)) + ' '
+                            + str(randint(-1, 10)) + ' '
+                            + str(randint(0, 14)) + ' '
+                            + str(randint(-30, 50)) + ' '
+                            + str(randint(1, 100)) + '\n')
+
 def main():
+    generate_data()
+    time.sleep(3)
     run_observer()
 
 if __name__ == "__main__":
