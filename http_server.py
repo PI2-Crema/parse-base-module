@@ -4,27 +4,33 @@ import os.path
 import simplejson
 
 
-# HTTPRequestHandler class
 class RequestHandler(BaseHTTPRequestHandler):
+    # HTTPRequestHandler class
 
-  def do_GET(self):
+    def do_get(self):
 
         self.send_response(200)
-        self.send_header('Content-type','text/html')
+        self.send_header(
+            'Content-type',
+            'text/html'
+            )
         self.end_headers()
 
         message = "Hello Gabiras! Sou dev python agora"
         self.wfile.write(bytes(message, "utf8"))
         return
 
-  def do_POST(self):
+    def do_post(self):
 
         print("<----- Request Start -----\n")
 
         self.data_string = self.rfile.read(int(self.headers['Content-Length']))
 
         self.send_response(200)
-        self.send_header('Content-type','text/html')
+        self.send_header(
+            'Content-type',
+            'text/html'
+            )
         self.end_headers()
 
         data = simplejson.loads(self.data_string)
@@ -34,15 +40,18 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         print("<----- Request End -----\n")
 
-def run():
-  print('starting server...')
-  server_address = ('', 8000)
-  httpd = HTTPServer(server_address, RequestHandler)
-  print('running server...')
-  httpd.serve_forever()
+    def run():
+        print('starting server...')
+        server_address = ('', 8000)
+        httpd = HTTPServer(server_address, RequestHandler)
+        print('running server...')
+        httpd.serve_forever()
+
 
 def main():
-    run()
+    # RequestHandler(request, client_address, server)
+    RequestHandler.run()
+
 
 if __name__ == "__main__":
     main()
