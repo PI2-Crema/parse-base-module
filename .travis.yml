@@ -1,10 +1,10 @@
 language: python
 python:
-  - "3.6"
+  - 3.6
 
 install:
   - pip install -r dev-requirements.txt
 
 script:
   - flake8 .
-  - pytest --create-db
+  - py.test --create-db
