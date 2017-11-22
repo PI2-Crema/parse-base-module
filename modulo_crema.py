@@ -1,5 +1,7 @@
 import os.path
-import io, json
+import io
+import json
+
 
 def observer(filepath):
     if os.path.isfile(filepath):
@@ -12,6 +14,7 @@ def observer(filepath):
             )
 
         start_read(file_copy)
+
 
 def start_read(file_name):
     with open(file_name) as file:
@@ -29,27 +32,30 @@ def start_read(file_name):
                     'temperature': parametros[7],
                     'conductivity': parametros[8],
                 }, ensure_ascii=True).encode('utf8'))
+    # ID HORA MINUTO NIVEL(0/100) BATERIA(0/100)
+    # CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
+
+    # POST
+    # http://localhost:3000/feeders/register_data
+    # [
+    # {
+    #   network_code:
+    #   hora:
+    #   minute:
+    #   food_level:
+    #   battery_level:
+    #   error_code:
+    #   ph:
+    #   temperature:
+    #   conductivity:
+    # }
+    # ]
+
 
 def main():
     filepath = 'nodes.txt'
     observer(filepath)
 
+
 if __name__ == "__main__":
-
-# ID  HORA MINUTO NIVEL(0/100) BATERIA(0/100) CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
-
-# POST
-# http://localhost:3000/feeders/register_data
-# [
-# {
-#   network_code:
-#   hora:
-#   minute:
-#   food_level:
-#   battery_level:
-#   error_code:
-#   ph:
-#   temperature:
-#   conductivity:
-# }
-# ]
+    main()

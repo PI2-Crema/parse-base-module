@@ -1,8 +1,12 @@
-import json
 import requests
 import os.path
 import time
-from random import *
+from random import randint
+from decouple import config
+
+server = config('SERVER_ADDRESS', default='http://127.0.0.1:3000')
+endpoint = config('SERVER_ENDPOINT', default='/feeders/register_data')
+DEBUG = config('DEBUG', default=True)
 
 def run_observer():
     try:
@@ -11,6 +15,7 @@ def run_observer():
             observer('medidas_tanques.txt')
     except KeyboardInterrupt:
         print("parei")
+
 
 def observer(filepath):
     if os.path.isfile(filepath):
@@ -25,15 +30,18 @@ def observer(filepath):
         if status_code == 200:
             delete_file(file_copy)
 
+
 def delete_file(file_name):
     if os.path.isfile(file_name):
         os.remove(file_name)
 
+
 def post_register_data(post_fields):
-    url = 'http://172.20.10.3:3000/feeders/register_data'
+    url = "{}{}".format(server, endpoint)
     post_request = requests.post(url, json=post_fields)
     print(post_fields)
     return post_request.status_code
+
 
 def read_file(file_name):
     keys = ["network_code",
@@ -59,29 +67,35 @@ def read_file(file_name):
             array_data.append(json_data)
             json_data = {}
 
-
         file_node.close()
-    request_data = {'data':array_data}
+    request_data = {'data': array_data}
     return request_data
 
-# ID  HORA MINUTO NIVEL(0/100) BATERIA(0/100) CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
+
 def generate_data():
+    # ID HORA MINUTO NIVEL(0/100) BATERIA(0/100)
+    # CODE-ERROR PH TEMPERATURA CODUTIVIDADE
     with open("medidas_tanques.txt", "w") as outfile:
         for i in range(0, 100):
-            outfile.write(str(randint(1, 3)) + ' '
-                            + str(randint(1, 24)) + ' '
-                            + str(randint(1, 60)) + ' '
-                            + str(randint(0, 100)) + ' '
-                            + str(randint(0, 100)) + ' '
-                            + str(randint(-1, 10)) + ' '
-                            + str(randint(0, 14)) + ' '
-                            + str(randint(-30, 50)) + ' '
-                            + str(randint(1, 100)) + '\n')
+            outfile.write(
+                str(randint(1, 3)) + ' ' +
+                str(randint(1, 24)) + ' ' +
+                str(randint(1, 60)) + ' ' +
+                str(randint(0, 100)) + ' ' +
+                str(randint(0, 100)) + ' ' +
+                str(randint(-1, 10)) + ' ' +
+                str(randint(0, 14)) + ' ' +
+                str(randint(-30, 50)) + ' ' +
+                str(randint(1, 100)) + '\n')
+
 
 def main():
-    generate_data()
-    time.sleep(3)
+    if DEBUG:
+        generate_data()
+        time.sleep(3)
+
     run_observer()
+
 
 if __name__ == "__main__":
     main()
