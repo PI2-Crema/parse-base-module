@@ -2,6 +2,12 @@ import requests
 import os.path
 import time
 from random import randint
+from decouple import config
+
+
+server = config('SERVER_ADDRESS', default='http://127.0.0.1:3000')
+endpoint = config('SERVER_ENDPOINT', default='/feeders/register_data')
+DEBUG = config('DEBUG', default=True)
 
 
 def run_observer():
@@ -33,7 +39,7 @@ def delete_file(file_name):
 
 
 def post_register_data(post_fields):
-    url = 'http://192.168.15.151:3000/feeders/register_data'
+    url = "{}{}".format(server, endpoint)
     post_request = requests.post(url, json=post_fields)
     print(post_fields)
     return post_request.status_code
@@ -86,8 +92,10 @@ def generate_data():
 
 
 def main():
-    generate_data()
-    time.sleep(3)
+    if DEBUG:
+        generate_data()
+        time.sleep(3)
+
     run_observer()
 
 
