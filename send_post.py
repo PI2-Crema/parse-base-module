@@ -8,7 +8,7 @@ def run_observer():
     try:
         while True:
             time.sleep(1)
-            observer('nodes.txt')
+            observer('medidas_tanques.txt')
     except KeyboardInterrupt:
         print("parei")
 
@@ -30,7 +30,7 @@ def delete_file(file_name):
         os.remove(file_name)
 
 def post_register_data(post_fields):
-    url = 'http://192.168.15.151:3000/feeders/register_data'
+    url = 'http://172.20.10.3:3000/feeders/register_data'
     post_request = requests.post(url, json=post_fields)
     print(post_fields)
     return post_request.status_code
@@ -66,7 +66,7 @@ def read_file(file_name):
 
 # ID  HORA MINUTO NIVEL(0/100) BATERIA(0/100) CODE-ERROR  PH TEMPERATURA CODUTIVIDADE
 def generate_data():
-    with open("nodes.txt", "w") as outfile:
+    with open("medidas_tanques.txt", "w") as outfile:
         for i in range(0, 100):
             outfile.write(str(randint(1, 3)) + ' '
                             + str(randint(1, 24)) + ' '

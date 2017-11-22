@@ -28,9 +28,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         data = simplejson.loads(self.data_string)
-        with open("data_server.txt", "w") as outfile:
-            for key, value in data.items():
-                outfile.write(str(value) + ' ')
+        with open("nodes.txt", "w") as outfile:
+            outfile.write(str(data['id']) + ' ')
+            for currentObject in data["data"]:
+                outfile.write(str(currentObject['hour']) + ' ')
+                outfile.write(str(currentObject['minute']) + ' ')
+                outfile.write(str(currentObject['quantity']) + ' ')
 
         print("<----- Request End -----\n")
 
