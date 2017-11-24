@@ -12,7 +12,7 @@ output_file_name = config('OUTPUT_FILE_NAME', default='nodes')
 class RequestHandler(BaseHTTPRequestHandler):
     # HTTPRequestHandler class
 
-    def do_get(self):
+    def do_GET(self):
 
         self.send_response(200)
         self.send_header(
@@ -25,7 +25,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(bytes(message, "utf8"))
         return
 
-    def do_post(self):
+    def do_POST(self):
 
         print("<----- Request Start -----\n")
 
