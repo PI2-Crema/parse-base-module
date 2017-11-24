@@ -64,7 +64,7 @@ def read_file(file_name):
             "oxigenium"]
     json_data = {}
     array_data = []
-    with open(input_file_name, "r") as file_node:
+    with open(file_name, "r") as file_node:
         data = file_node.readlines()
 
         for line in data:
@@ -84,7 +84,7 @@ def read_file(file_name):
 def generate_data():
     # ID HORA MINUTO NIVEL(0/100) BATERIA(0/100)
     # CODE-ERROR PH CONDUTIVIDADE TEMPERATURA TURBIDEZ OXIGENIO
-    with open(file_name + ".txt", "w") as outfile:
+    with open(input_file_name + ".txt", "w") as outfile:
         for i in range(0, 100):
             outfile.write(
                 str(randint(1, 3)) + ' ' +
