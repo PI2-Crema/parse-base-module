@@ -4,15 +4,22 @@ import time
 from random import randint
 from decouple import config
 
+# Example .env file
+# SERVER_ADDRESS=http://127.0.0.1:3000
+# SERVER_ENDPOINT=/feeders/register_data
+# DEBUG=False
+# INPUT_FILE_NAME=medidas_tanques
+
 server = config('SERVER_ADDRESS', default='http://127.0.0.1:3000')
 endpoint = config('SERVER_ENDPOINT', default='/feeders/register_data')
-DEBUG = config('DEBUG', default=True)
+DEBUG = config('DEBUG', default=True, cast=bool)
+input_file_name = config('INPUT_FILE_NAME', default='medidas_tanques')
 
 def run_observer():
     try:
         while True:
             time.sleep(1)
-            observer('medidas_tanques.txt')
+            observer(input_file_name + '.txt')
     except KeyboardInterrupt:
         print("parei")
 
@@ -51,11 +58,13 @@ def read_file(file_name):
             "battery_level",
             "error_code",
             "ph",
+            "conductivity",
             "temperature",
-            "conductivity"]
+            "turbidity",
+            "oxigenium"]
     json_data = {}
     array_data = []
-    with open(file_name, "r") as file_node:
+    with open(input_file_name, "r") as file_node:
         data = file_node.readlines()
 
         for line in data:
@@ -74,8 +83,8 @@ def read_file(file_name):
 
 def generate_data():
     # ID HORA MINUTO NIVEL(0/100) BATERIA(0/100)
-    # CODE-ERROR PH TEMPERATURA CODUTIVIDADE
-    with open("medidas_tanques.txt", "w") as outfile:
+    # CODE-ERROR PH CONDUTIVIDADE TEMPERATURA TURBIDEZ OXIGENIO
+    with open(file_name + ".txt", "w") as outfile:
         for i in range(0, 100):
             outfile.write(
                 str(randint(1, 3)) + ' ' +
@@ -85,13 +94,16 @@ def generate_data():
                 str(randint(0, 100)) + ' ' +
                 str(randint(-1, 10)) + ' ' +
                 str(randint(0, 14)) + ' ' +
+                str(randint(0, 100)) + ' ' +
                 str(randint(-30, 50)) + ' ' +
+                str(randint(0, 100)) + ' ' +
                 str(randint(1, 100)) + '\n')
 
 
 def main():
     if DEBUG:
         generate_data()
+        print('modo debug')
         time.sleep(3)
 
     run_observer()

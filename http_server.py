@@ -2,7 +2,12 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import os.path
 import simplejson
+from decouple import config
 
+# Example .env file
+# OUTPUT_FILE_NAME=nodes
+
+output_file_name = config('OUTPUT_FILE_NAME', default='nodes')
 
 class RequestHandler(BaseHTTPRequestHandler):
     # HTTPRequestHandler class
@@ -34,7 +39,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
         data = simplejson.loads(self.data_string)
-        with open("nodes.txt", "w") as outfile:
+        with open(output_file_name + ".txt", "w") as outfile:
             outfile.write(str(data['id']) + ' ')
             for currentObject in data["data"]:
                 outfile.write(str(currentObject['hour']) + ' ')
