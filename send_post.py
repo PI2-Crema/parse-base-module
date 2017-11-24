@@ -88,8 +88,8 @@ def generate_data():
         for i in range(0, 100):
             outfile.write(
                 str(randint(1, 3)) + ' ' +
-                str(randint(1, 24)) + ' ' +
-                str(randint(1, 60)) + ' ' +
+                str(randint(1, 23)) + ' ' +
+                str(randint(1, 59)) + ' ' +
                 str(randint(0, 100)) + ' ' +
                 str(randint(0, 100)) + ' ' +
                 str(randint(-1, 10)) + ' ' +
